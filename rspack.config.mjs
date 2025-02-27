@@ -1,6 +1,7 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import HtmlWebpackPlugin from "html-webpack-plugin";
+import ImageMinimizerPlugin from "image-minimizer-webpack-plugin";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isRunningWebpack = !!process.env.WEBPACK;
@@ -17,6 +18,23 @@ const config = {
   devtool: false,
   entry: {
     main: "./src/index",
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(jpe?g|png)$/,
+        use: [
+          {
+            loader: ImageMinimizerPlugin.loader,
+            options: {
+              minimizer: {
+                implementation: ImageMinimizerPlugin.sharpMinify,
+              },
+            },
+          },
+        ],
+      },
+    ],
   },
   plugins: [new HtmlWebpackPlugin()],
   output: {
